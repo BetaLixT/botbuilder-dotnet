@@ -132,10 +132,9 @@ namespace Microsoft.Bot.Builder.Adapters.Twilio
             }
 
             Dictionary<string, string> bodyDictionary;
-            using (var bodyStream = new StreamReader(httpRequest.Body))
+            foreach (var pair in httpRequest.Form)
             {
-                bodyDictionary =
-                    TwilioHelper.QueryStringToDictionary(await bodyStream.ReadToEndAsync().ConfigureAwait(false));
+                bodyDictionary.Add(pair.Key, pair.Value);
             }
 
             if (_options.ValidateIncomingRequests && !_twilioClient.ValidateSignature(httpRequest, bodyDictionary))
